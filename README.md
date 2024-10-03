@@ -4,3 +4,10 @@ Minimal Flutter App para Questionário Técnico com ACL e Envio de Mensagens Pus
 
 ## Instalação
 $ dart run build_runner build --delete-conflicting-outputs
+
+
+## Considerações
+
+**Criptografia de Senhas**: As senhas devem ser armazenadas de forma criptografada usando bcrypt ou uma função de hash segura.
+
+- bcrypt utilizado do lado do servidor, já que senhas jamais devem ser salvas no front-end, mesmo com bibliotecas que prometem uma segurança mais refinada como **flutter_secure_storage**

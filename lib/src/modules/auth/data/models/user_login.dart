@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'model.g.dart';
+part 'user_login.g.dart';
 
 
 enum UserRole {
@@ -11,12 +11,12 @@ enum UserRole {
 
 @JsonSerializable()
 class UserLoginModel extends Equatable {
-  final String token;
+  // final String token;
   final String userId;
   final UserRole role;
 
   const UserLoginModel({
-    required this.token,
+    // required this.token,
     required this.userId,
     required this.role,
   });
@@ -31,7 +31,7 @@ class UserLoginModel extends Equatable {
   @override
   // TODO: implement props
   List<Object?> get props => [
-        token,
+        // token,
         userId,
         role,
       ];
