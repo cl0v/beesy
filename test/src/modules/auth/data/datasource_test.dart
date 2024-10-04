@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:app/src/common/http/base_url.dart';
 import 'package:app/src/modules/auth/data/datasource.dart';
-import 'package:app/src/modules/auth/data/models/user_login.dart';
+import 'package:app/src/modules/auth/data/models/user.dart';
 import 'package:app/src/modules/auth/data/models/user_registration.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -99,7 +99,7 @@ Future<void> main() async {
       );
 
       //Assert
-      final user = UserLoginModel.fromJson(userJsonExample);
+      final user = UserModel.fromJson(userJsonExample);
       expect(
         response,
         (200, user),

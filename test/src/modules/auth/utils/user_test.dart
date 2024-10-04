@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:app/src/modules/auth/data/models/user_login.dart';
+import 'package:app/src/modules/auth/data/models/user.dart';
 import 'package:app/src/modules/auth/utils/user.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -12,8 +12,9 @@ import 'user_test.mocks.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   group('User auth save user', () {
-    const user = UserLoginModel(
+    const user = UserModel(
       // token: 'token',
+      email: 'user@example.com',
       userId: 'userId',
       role: UserRole.user,
     );
@@ -39,12 +40,13 @@ void main() {
 
     test('GetIt should retrieve user after saved', () async {
       await utils.saveUser(user);
-      expect(GetIt.I.get<UserLoginModel>(), user);
+      expect(GetIt.I.get<UserModel>(), user);
     });
   });
   group('User auth restore User and set globally with GetIt', () {
-    const user = UserLoginModel(
+    const user = UserModel(
       // token: 'token',
+      email: 'user@example.com',
       userId: 'userId',
       role: UserRole.user,
     );
@@ -64,7 +66,7 @@ void main() {
         (_) => jsonEncode(user.toJson()),
       );
       expect(await utils.restoreUser(), user);
-      expect(GetIt.I.get<UserLoginModel>(), user);
+      expect(GetIt.I.get<UserModel>(), user);
     });
 
     test('Error', () async {
@@ -73,15 +75,15 @@ void main() {
       );
       final u = await utils.restoreUser();
       expect(u, null);
-      expect(GetIt.I.isRegistered<UserLoginModel>(), false);
+      expect(GetIt.I.isRegistered<UserModel>(), false);
     });
   });
 
   group('User auth clear user', () {
-    const user = UserLoginModel(
+    const user = UserModel(
       // token: 'token',
       userId: 'userId',
-      role: UserRole.user,
+      role: UserRole.user, email: 'user@example.com',
     );
     final prefs = MockSharedPreferences();
     final utils = UserAuthUtils(prefs);
@@ -89,21 +91,21 @@ void main() {
       when(prefs.getString('user')).thenAnswer(
         (_) => jsonEncode(user.toJson()),
       );
-      GetIt.I.registerSingleton<UserLoginModel>(user);
+      GetIt.I.registerSingleton<UserModel>(user);
     });
     test('Successful logout', () async {
       when(prefs.remove('user')).thenAnswer(
         (_) async => true,
       );
       await expectLater(utils.logout(), completes);
-      expect(GetIt.I.isRegistered<UserLoginModel>(), false);
+      expect(GetIt.I.isRegistered<UserModel>(), false);
     });
     test('Failed to logout', () async {
       when(prefs.remove('user')).thenAnswer(
         (_) async => false,
       );
       await expectLater(utils.logout(), completes);
-      expect(GetIt.I.isRegistered<UserLoginModel>(), false);
+      expect(GetIt.I.isRegistered<UserModel>(), false);
     });
   });
 }
