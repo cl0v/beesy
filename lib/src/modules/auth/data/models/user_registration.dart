@@ -19,3 +19,5 @@ class UserRegistrationModel extends Equatable {
   @override
   List<Object?> get props => [message, userId];
 }
+
+

@@ -10,9 +10,9 @@ enum UserRole {
 
 @JsonSerializable()
 class UserModel extends Equatable {
+  final String email;
   final String userId;
   final UserRole role;
-  final String email;
 
   const UserModel( {
     required this.userId,

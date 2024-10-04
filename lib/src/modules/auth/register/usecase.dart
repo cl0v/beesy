@@ -2,25 +2,28 @@ import 'package:app/src/modules/auth/data/datasource.dart';
 import 'package:app/src/modules/auth/login/usecase.dart';
 import 'package:dio/dio.dart';
 
-
 class RegisterUserUsecase {
-  static Future<(bool created, bool loggedIn)> call(
+  static Future<(String? registrationError, String? logginError)> call(
     String email,
     String password,
   ) async {
     final client = Dio();
+    String? loginError;
 
-    final (registrationStatusCode, _) =
-        await AuthDatasource(client).register(email, password);
+    final (model, registrationError) = await AuthDatasource(client).register(
+      email,
+      password,
+    );
 
-    if (registrationStatusCode == 201) {
+    if (model != null) {
       // Apenas por que não gosto de registrar e ter que fazer login logo em seguida
       // resolvi fazer o login logo após o registro ser concluído.
-      final login = await UserLoginUsecase.call(email, password);
-
-      return (true, login);
+      loginError = await UserLoginUsecase.call(
+        email,
+        password,
+      );
     }
 
-    return (false, false);
+    return (registrationError, loginError);
   }
 }

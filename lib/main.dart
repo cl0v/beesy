@@ -1,24 +1,18 @@
-import 'package:app/src/pages/home.dart';
+import 'package:app/app.dart';
+import 'package:app/getit.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+import 'src/modules/auth/utils/user.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-  // This widget is the root of your application.
+  getIt.registerSingleton<SharedPreferences>(
+    await SharedPreferences.getInstance(),
+  );
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const HomePage(),
-    );
-  }
+  await UserAuthUtils(getIt.get<SharedPreferences>()).restoreUser();
+
+  runApp(const BeesyApp());
 }

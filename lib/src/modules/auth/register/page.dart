@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'usecase.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -15,25 +17,35 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _passwordController = TextEditingController();
   String? _errorMessage;
 
+  bool loading = false;
+
   Future<void> _register() async {
-    final (registered, loggedIn) = await RegisterUserUsecase.call(
+    setState(() {
+      loading = true;
+    });
+
+    final (regError, logError) = await RegisterUserUsecase.call(
       _emailController.text.trim(),
       _passwordController.text.trim(),
     );
-    if (!registered) {
+
+    setState(() {
+      loading = false;
+    });
+
+    if (regError != null) {
       setState(() {
-        _errorMessage = "Dados de entrada inválidos ou email já cadastrado";
+        _errorMessage = regError;
       });
       return;
     }
-    if (registered) {
-      if (loggedIn) {
-        // TODO: Navega para a Home.
-        return;
-      }
-      // TODO: Navega para a tela de Login.
-      return;
+
+    if (logError != null) {
+      if (!mounted) return;
+      return context.go('/login');
     }
+
+    return context.go('/');
   }
 
   @override
@@ -59,9 +71,37 @@ class _RegisterPageState extends State<RegisterPage> {
               Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
               const SizedBox(height: 20),
             ],
+            RichText(
+              text: TextSpan(
+                text: 'Já possui conta? ',
+                style: Theme.of(context).textTheme.bodyLarge,
+                children: [
+                  TextSpan(
+                    text: 'Entrar',
+                    style: const TextStyle(
+                      color: Colors.blue,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => context.go('/login'),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _register,
-              child: const Text("Registrar"),
+              child: SizedBox(
+                width: double.infinity,
+                child: Center(
+                  child: loading
+                      ? const CircularProgressIndicator(
+                          strokeWidth: 2,
+                        )
+                      : const Text(
+                          "Registrar",
+                        ),
+                ),
+              ),
             ),
           ],
         ),

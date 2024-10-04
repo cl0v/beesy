@@ -1,8 +1,8 @@
 import 'package:app/src/modules/auth/login/usecase.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
-import '../../../pages/home.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,25 +19,20 @@ class _LoginPageState extends State<LoginPage> {
   String? _errorMessage;
 
   void _login() async {
-    final (loggedIn) = await UserLoginUsecase.call(
+    final error = await UserLoginUsecase.call(
       _emailController.text.trim(),
       _passwordController.text.trim(),
     );
-    if (!loggedIn) {
+    
+    if (error != null) {
       setState(() {
-        _errorMessage = "Email ou senha inválidos";
+        _errorMessage = error;
       });
       return;
     }
-    if (loggedIn) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomePage(),
-        ),
-      );
-      return;
-    }
+
+    if (!mounted) return;
+    context.go('/');
   }
 
   @override
@@ -66,9 +61,33 @@ class _LoginPageState extends State<LoginPage> {
               Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
               const SizedBox(height: 20),
             ],
+            RichText(
+              text: TextSpan(
+                text: 'Ainda não possui conta? ',
+                style: Theme.of(context).textTheme.bodyLarge,
+                children: [
+                  TextSpan(
+                    text: 'Cadastre-se aqui',
+                    style: const TextStyle(
+                      color: Colors.blue,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        context.go('/register');
+                      },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _login,
-              child: const Text("Login"),
+              child: const SizedBox(
+                width: double.infinity,
+                child: Center(
+                  child: Text("Login"),
+                ),
+              ),
             ),
           ],
         ),

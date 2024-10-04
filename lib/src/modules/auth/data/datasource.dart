@@ -1,9 +1,10 @@
 import 'dart:convert';
 
+import 'package:app/getit.dart';
 import 'package:app/src/common/http/base_url.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'
-    as secureStorage;
+    as secure_storage;
 
 import '../utils/jwt.dart';
 import 'models/user.dart';
@@ -11,98 +12,144 @@ import 'models/user_registration.dart';
 
 class AuthDatasource {
   final Dio client;
-  final secureStorage.FlutterSecureStorage secure;
+  final secure_storage.FlutterSecureStorage secure;
 
   AuthDatasource(
     this.client, {
-    this.secure = const secureStorage.FlutterSecureStorage(),
+    this.secure = const secure_storage.FlutterSecureStorage(),
   });
 
-  Future<(int, UserRegistrationModel?)> register(
+  Future<(UserRegistrationModel?, String?)> register(
     String email,
     String password,
   ) async {
-    int statusCode = -1;
-    UserRegistrationModel? model;
-
     try {
       final response = await client.post(
         '$baseUrl/auth/register',
-        data: jsonEncode(
+        options: Options(
+          headers: {
+            'content-type': 'multipart/form-data',
+          },
+        ),
+        data: FormData.fromMap(
           {
             "email": email,
             "password": password,
           },
         ),
       );
-      statusCode = response.statusCode ?? -1;
-      model = UserRegistrationModel.fromJson(response.data);
+      final model = UserRegistrationModel.fromJson(jsonDecode(response.data));
+      return (model, null);
     } on DioException catch (e) {
-      (statusCode, model) = (e.response?.statusCode ?? -1, null);
+      return (null, jsonDecode(e.response?.data)['message'] as String?);
     }
-
-    return (statusCode, model);
   }
 
   /// Retorna o StatusCode e o objeto de retorno do servidor
-  Future<(int, UserModel?)> login(
+  Future<(UserModel?, String?)> login(
     String email,
     String password,
   ) async {
-    int statusCode = -1;
-    UserModel? model;
-
     try {
       final response = await client.post(
         '$baseUrl/auth/login',
-        data: jsonEncode(
+        options: Options(
+          headers: {'content-type': 'multipart/form-data'},
+        ),
+        data: FormData.fromMap(
           {
             "email": email,
             "password": password,
           },
         ),
       );
-      if (statusCode == 200) {
-        JwtUtils(secure).saveJWT(response.data['token']);
+      if (response.statusCode == 200) {
+        JwtUtils(secure).saveJWT(jsonDecode(response.data)['token']);
       }
-      statusCode = response.statusCode ?? -1;
-      model = UserModel.fromJson(
+      final model = UserModel.fromJson(
         (jsonDecode(response.data) as Map<String, dynamic>)
           ..remove('token')
           ..addAll(
             {'email': email},
           ),
       );
+      return (model, null);
     } on DioException catch (e) {
-      (statusCode, model) = (e.response?.statusCode ?? -1, null);
+      return (null, jsonDecode(e.response?.data)['message'] as String?);
     }
-
-    return (statusCode, model);
   }
+
   /// Retorna o StatusCode e o objeto de retorno do servidor
   /// 404 para caso o usuário não exista
   /// 200 para caso o usuário exista
-  Future<(int statusCode, UserModel? model)> getUser() async {
-    int statusCode = -1;
-    UserModel? model;
-
+  Future<(UserModel?, String?)> getUser() async {
     final token = JwtUtils(secure).getJWT();
     final options = Options(
       headers: {'Authorization': 'Bearer $token'},
     );
+
     try {
       final response = await client.get(
         '$baseUrl/auth/me',
         options: options,
       );
 
-      statusCode = response.statusCode ?? -1;
-      model = UserModel.fromJson(response.data);
+      final model = UserModel.fromJson(jsonDecode(response.data));
 
+      return (model, null);
     } on DioException catch (e) {
-      (statusCode, model) = (e.response?.statusCode ?? -1, null);
+      return (null, jsonDecode(e.response?.data)['message'] as String?);
     }
+  }
 
-    return (statusCode, model);
+  Future<(String?, String?)> logout() async {
+    final token = JwtUtils(secure).getJWT();
+    final options = Options(
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    try {
+      final result = await client.post(
+        '$baseUrl/auth/logout',
+        options: options,
+      );
+
+      return (jsonDecode(result.data)['message'] as String?, null);
+    } on DioException catch (e) {
+      return (null, jsonDecode(e.response?.data)['message'] as String?);
+    }
+  }
+
+  Future<(String?, String?)> changePassword(
+    String oldPassword,
+    String newPassword,
+  ) async {
+    final userId = getIt.get<UserModel>().userId;
+
+    final token = JwtUtils(secure).getJWT();
+
+    final options = Options(
+      contentType: 'multipart/form-data',
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'multipart/form-data'
+      },
+    );
+
+    try {
+      final result = await client.patch(
+        '$baseUrl/users/$userId/password',
+        options: options,
+        data: FormData.fromMap(
+          {
+            "oldPassword": oldPassword,
+            "newPassword": newPassword,
+          },
+        ),
+      );
+      return (jsonDecode(result.data)['message'] as String?, null);
+    } on DioException catch (e) {
+      return (null, jsonDecode(e.response?.data)['message'] as String?);
+    }
   }
 }

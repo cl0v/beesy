@@ -4,25 +4,24 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserLoginUsecase {
-  static Future<bool> call(
+  static Future<String?> call(
     String email,
     String password,
   ) async {
     final client = Dio();
 
-    final (statusCode, model) = await AuthDatasource(client).login(
+    final (model, error) = await AuthDatasource(client).login(
       email,
       password,
     );
 
-    if (statusCode == 200 && model != null) {
+    if (model != null) {
       UserAuthUtils utils = UserAuthUtils(
         await SharedPreferences.getInstance(),
       );
       
       await utils.saveUser(model);
-      return true;
     }
-    return false;
+    return error;
   }
 }
