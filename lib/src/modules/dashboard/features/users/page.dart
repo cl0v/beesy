@@ -1,9 +1,9 @@
 
 import 'package:app/src/modules/auth/data/models/user.dart';
-import 'package:app/src/modules/dashboard/features/users/usecases/fetch_users.dart';
+import 'package:app/src/modules/dashboard/features/users/data/usecases/fetch_users.dart';
 import 'package:flutter/material.dart';
 
-import 'usecases/update_user_role.dart';
+import 'data/usecases/update_user_role.dart';
 
 class UsersListPage extends StatefulWidget {
   const UsersListPage({super.key});

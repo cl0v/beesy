@@ -8,6 +8,7 @@ import 'package:app/src/pages/home.dart';
 import 'package:go_router/go_router.dart';
 import 'src/modules/auth/profile/features/change_password/page.dart';
 import 'src/modules/auth/profile/page.dart';
+import 'src/modules/dashboard/features/notifications/page.dart';
 import 'src/modules/dashboard/features/users/page.dart';
 import 'src/modules/notifications/page.dart';
 
@@ -53,6 +54,10 @@ final router = GoRouter(
         GoRoute(
           path: '/users',
           builder: (context, state) => const UsersListPage(),
+        ),
+        GoRoute(
+          path: '/notifications',
+          builder: (context, state) => const SendNotificationPage(),
         ),
         GoRoute(
           path: '/logs',

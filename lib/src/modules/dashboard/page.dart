@@ -26,7 +26,7 @@ class DashboardPage extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              // Enviar notificação
+              context.push('/dashboard/notifications');
             },
             child: const SizedBox(
               width: double.infinity,
