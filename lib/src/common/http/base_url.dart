@@ -1,1 +1,3 @@
- const baseUrl = "http://localhost:3000"; // TODO: Replace with your base url
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+String baseUrl = dotenv.env['BASE_URL']??"";

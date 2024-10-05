@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:app/src/modules/auth/data/models/user.dart';
 import 'package:app/src/modules/dashboard/features/users/usecases/fetch_users.dart';

@@ -75,7 +75,7 @@ class AuthDatasource {
       );
       return (model, null);
     } on DioException catch (e) {
-      return (null, jsonDecode(e.response?.data)['message'] as String?);
+      return (null, jsonDecode(e.response?.data)?['message'] as String?);
     }
   }
 
