@@ -11,11 +11,12 @@ enum UserRole {
 @JsonSerializable()
 class UserModel extends Equatable {
   final String email;
-  final String userId;
+  @JsonKey(name: "userId")
+  final String id;
   final UserRole role;
 
   const UserModel( {
-    required this.userId,
+    required this.id,
     required this.role,
     required this.email,
   });
@@ -29,7 +30,7 @@ class UserModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        userId,
+        id,
         role,
       ];
 }

@@ -16,9 +16,8 @@ $ dart run build_runner build --delete-conflicting-outputs
 - Http Client: dio.
 - State Management: provider.
 - Navigation and routing: go_router.
-- Service Locator: get_it. // If needed
+- Service Locator: get_it.
 - Persistent storage for secure risk data: flutter_secure_storage.
 - Persistent storage for no critical data: shared_preferences.
-- Persistent storage for critical data: DO NOT APPLY
-FOR THE SCOPE OF THIS APP.
+- Persistent storage for critical data: DO NOT APPLY FOR THE SCOPE OF THIS APP.
 

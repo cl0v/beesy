@@ -15,7 +15,7 @@ void main() {
     const user = UserModel(
       // token: 'token',
       email: 'user@example.com',
-      userId: 'userId',
+      id: 'userId',
       role: UserRole.user,
     );
     final prefs = MockSharedPreferences();
@@ -47,7 +47,7 @@ void main() {
     const user = UserModel(
       // token: 'token',
       email: 'user@example.com',
-      userId: 'userId',
+      id: 'userId',
       role: UserRole.user,
     );
     final prefs = MockSharedPreferences();
@@ -82,7 +82,7 @@ void main() {
   group('User auth clear user', () {
     const user = UserModel(
       // token: 'token',
-      userId: 'userId',
+      id: 'userId',
       role: UserRole.user, email: 'user@example.com',
     );
     final prefs = MockSharedPreferences();

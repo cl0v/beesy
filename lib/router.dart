@@ -2,11 +2,13 @@ import 'package:app/getit.dart';
 import 'package:app/src/modules/auth/data/models/user.dart';
 import 'package:app/src/modules/auth/login/page.dart';
 import 'package:app/src/modules/auth/register/page.dart';
+import 'package:app/src/modules/dashboard/features/audit_logs/page.dart';
 import 'package:app/src/modules/dashboard/page.dart';
 import 'package:app/src/pages/home.dart';
 import 'package:go_router/go_router.dart';
 import 'src/modules/auth/profile/features/change_password/page.dart';
 import 'src/modules/auth/profile/page.dart';
+import 'src/modules/dashboard/features/users/page.dart';
 import 'src/modules/notifications/page.dart';
 
 final router = GoRouter(
@@ -47,6 +49,16 @@ final router = GoRouter(
     GoRoute(
       path: '/dashboard',
       builder: (context, state) => const DashboardPage(),
+      routes: [
+        GoRoute(
+          path: '/users',
+          builder: (context, state) => const UsersListPage(),
+        ),
+        GoRoute(
+          path: '/logs',
+          builder: (context, state) => const AuditLogsPage(),
+        ),
+      ]
     )
   ],
 );

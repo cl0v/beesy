@@ -1,10 +1,6 @@
 import 'package:app/getit.dart';
-import 'package:app/src/modules/auth/login/page.dart';
-import 'package:app/src/modules/auth/utils/user.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../modules/auth/data/models/user.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,31 +11,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  fetchUser() async {
-    return;
-    final user = await UserAuthUtils(
-      await SharedPreferences.getInstance(),
-    ).restoreUser();
-
-    if (!mounted) return;
-    if (user == null) {
-      await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const LoginPage(),
-        ),
-      );
-    } else {
-      setState(() {});
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    // if (!getIt.isRegistered<UserModel>()) {
-    //   fetchUser();
-    //   return const SplashScreen();
-    // }
     final user = getIt.get<UserModel>();
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -61,7 +36,6 @@ class _HomePageState extends State<HomePage> {
         minimum: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Visibility(
               visible: user.role == UserRole.admin,

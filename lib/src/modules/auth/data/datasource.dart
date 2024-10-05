@@ -83,7 +83,7 @@ class AuthDatasource {
   /// 404 para caso o usuário não exista
   /// 200 para caso o usuário exista
   Future<(UserModel?, String?)> getUser() async {
-    final token = JwtUtils(secure).getJWT();
+    final token = await JwtUtils(secure).getJWT();
     final options = Options(
       headers: {'Authorization': 'Bearer $token'},
     );
@@ -103,7 +103,7 @@ class AuthDatasource {
   }
 
   Future<(String?, String?)> logout() async {
-    final token = JwtUtils(secure).getJWT();
+    final token = await JwtUtils(secure).getJWT();
     final options = Options(
       headers: {'Authorization': 'Bearer $token'},
     );
@@ -124,9 +124,9 @@ class AuthDatasource {
     String oldPassword,
     String newPassword,
   ) async {
-    final userId = getIt.get<UserModel>().userId;
+    final userId = getIt.get<UserModel>().id;
 
-    final token = JwtUtils(secure).getJWT();
+    final token = await JwtUtils(secure).getJWT();
 
     final options = Options(
       contentType: 'multipart/form-data',
