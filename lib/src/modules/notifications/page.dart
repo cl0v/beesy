@@ -1,4 +1,8 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+
+import 'data/usecase.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -17,10 +21,32 @@ class _NotificationsPageState extends State<NotificationsPage> {
       ),
       body: SafeArea(
           child: FutureBuilder(
-        future: Future.value(null),
+        future: NotificationsUsecase.call(),
         builder: (context, snapshot) {
-          //TODO: Implementar notificações
-          return const Text('Notificações');
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(snapshot.error.toString()),
+            );
+          } else if (snapshot.hasData) {
+            if (snapshot.data!.isEmpty) {
+              return const Center(
+                child: Text("Nenhuma notificação"),
+              );
+            }
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final notification = snapshot.data![index];
+                return ListTile(
+                  title: Text(notification.title),
+                  subtitle: Text(notification.message),
+                );
+              },
+            );
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         },
       )),
     );
