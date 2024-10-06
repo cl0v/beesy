@@ -93,7 +93,6 @@ lib/
 │ ├── services/
 │ │ └── firebase_service.dart # Configuração do Firebase
 │ └── utils/
-│ └── constants.dart # Constantes do app
 ├── modules/
 │ ├── auth/
 │ │ ├── data/
@@ -104,7 +103,7 @@ lib/
 │ │ │ └── register_page.dart # Página de Registro
 │ │ └── auth_controller.dart # Lógica de autenticação e controle de estado
 │ ├── home/
-│ │ └── home_page.dart # Página inicial (após login)
+│ │ └── ui/home_page.dart # Página inicial (após login)
 └── routes/
 └── app_router.dart # Configuração de rotas com go_router
 ```

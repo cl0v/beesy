@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'router.dart';
+import 'app_router.dart';
 
 class BeesyApp extends StatelessWidget {
   const BeesyApp({
