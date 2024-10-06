@@ -1,12 +1,19 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:google_api_availability/google_api_availability.dart';
 
 
 /// "Instala" o sistema de notificações push
 /// Solicita a permissão do usuário -> Garante o recebimento em background -> Observa as mensagens em foreground
 Future<void> setupFirebaseMessagingHandler() async {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  try {
+    await GoogleApiAvailability.instance.makeGooglePlayServicesAvailable();
+  } catch (_){
+    debugPrint('Failed to make Google Play Services available.');
+  }
 
   /// Solicita a permissão do usuário para receber notificações
   NotificationSettings settings = await messaging.requestPermission(
@@ -20,6 +27,8 @@ Future<void> setupFirebaseMessagingHandler() async {
   );
 
   debugPrint('User granted permission: ${settings.authorizationStatus}');
+
+  debugPrint(await messaging.getToken());
 
   /// Garante que as notificações em background sejam observadas em produção.
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
