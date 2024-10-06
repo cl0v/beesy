@@ -7,6 +7,7 @@ import 'src/modules/auth/utils/user.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
 
   getIt.registerSingleton<SharedPreferences>(
     await SharedPreferences.getInstance(),
