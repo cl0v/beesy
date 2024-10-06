@@ -7,11 +7,13 @@ import '../../../utils/user.dart';
 
 class UserLogoutUsecase {
   static Future<bool> call() async {
+    await AuthDatasource(Dio()).logout();
+
     final utils = UserAuthUtils(
       getIt.get<SharedPreferences>()
     );
     await utils.logout();
-    await AuthDatasource(Dio()).logout();
+    
     return true;
   }
 }

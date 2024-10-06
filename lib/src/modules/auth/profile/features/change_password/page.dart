@@ -88,6 +88,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 );
                 if(success != null){
                   await Future.delayed(const Duration(seconds: 1));
+                  if(!context.mounted) return;
                   context.pop();
                 }
               },

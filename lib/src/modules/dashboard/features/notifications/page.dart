@@ -1,6 +1,5 @@
 import 'package:app/src/modules/auth/data/models/user.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../users/data/usecases/fetch_users.dart';
 import 'data/usecases/send_notification.dart';
@@ -134,7 +133,7 @@ class _SendNotificationPageState extends State<SendNotificationPage> {
                         content: Center(child: Text(succes)),
                       ),
                     );
-                    context.pop(context);
+                    //context.pop(context);
                   }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(

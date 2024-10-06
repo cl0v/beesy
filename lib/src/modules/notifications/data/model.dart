@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 part 'model.g.dart';
-@JsonSerializable()
+@JsonSerializable(createToJson: false)
 class NotificationModel {
   @JsonKey(name: "notificationId")
   final String id;

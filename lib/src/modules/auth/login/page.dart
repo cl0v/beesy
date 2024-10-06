@@ -1,5 +1,4 @@
 import 'package:app/src/modules/auth/login/usecase.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -12,10 +11,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _emailController =
-      TextEditingController(text: kDebugMode ? "user@example.com" : "");
-  final TextEditingController _passwordController =
-      TextEditingController(text: kDebugMode ? "password123" : "");
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   String? _errorMessage;
 
   void _login() async {
@@ -23,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
       _emailController.text.trim(),
       _passwordController.text.trim(),
     );
-    
+
     if (error != null) {
       setState(() {
         _errorMessage = error;

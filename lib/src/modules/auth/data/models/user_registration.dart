@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'user_registration.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createToJson: false)
 class UserRegistrationModel extends Equatable {
   final String message;
   final String userId;
