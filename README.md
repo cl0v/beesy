@@ -55,14 +55,12 @@ Minimal Flutter App para Questionário Técnico com ACL e Envio de Mensagens Pus
 
 **Controle de Acesso**: Algumas rotas estão protegidas por Route Guard para garantir que apenas usuários autorizados tenham acesso a algumas partes do aplicativo.
 
-**Notas**: Algumas funcionalidades que não foram implementadas para esse exemplo:
+**State Management**: Sei que é um assunto sensível para algumas fases do recrutamento, porém optei por usar a gerência de estado padrão do Flutter (setState) pois em nenhum momento me pareceu necessário uma abordagem mais sofisticada para tal. Mas vale ressaltar que tenho domínio nas principais bibliotecas (BLoC, Provider, Riverpod, GetX, MobX, etc).
 
+**Notas**: Algumas funcionalidades que não foram implementadas para esse exemplo
 - Validação do JWT pelo lado do cliente;
 - Redirecionamento para tela de login em caso de statusCode 401;
 - Tratamento de permissões não concedidas;
-
-**State Management**: Sei que é um assunto sensível para algumas fases do recrutamento, porém optei por usar a gerência de estado padrão do Flutter (setState) pois em nenhum momento me pareceu necessário uma abordagem mais sofisticada para tal. Mas vale ressaltar que tenho domínio nas principais bibliotecas (BLoC, Provider, Riverpod, GetX, MobX, etc).
-
 
 ## Funcionalidades
 - **Autenticação via Email/Senha**: Permite que os usuários façam login e cadastro usando email e senha.
