@@ -9,19 +9,19 @@ Minimal Flutter App para Questionário Técnico com ACL e Envio de Mensagens Pus
 2. Faça login na sua conta do Firebase:
 
    ```
-    firebase login
+   firebase login
    ```
 
 3. Instale a CLI do FlutterFire
 
    ```
-    dart pub global activate flutterfire_cli
+   dart pub global activate flutterfire_cli
    ```
 
-4. Configure seu projeto para utilizar o Firebase
+4. Configure seu projeto para utilizar o Firebase (app id: com.beesy.app)
 
    ```
-    flutterfire configure
+   flutterfire configure
    ```
 
 5. Siga as instruções para configurar o [certificado APNS do Firebase Cloud Messaging (FCM)](https://firebase.google.com/docs/cloud-messaging/flutter/client#upload_your_apns_authentication_keyrements) para iOS.
@@ -29,18 +29,18 @@ Minimal Flutter App para Questionário Técnico com ACL e Envio de Mensagens Pus
 6. Acesse o arquivo .env e altere a url para conectar ao servidor:
 
    ```
-    BASE_URL=SEU_ENDPOINT_AQUI #https://api.example.com/v1
+   BASE_URL=SEU_ENDPOINT_AQUI #https://api.example.com/v1
    ```
 
 7. Gere os arquivos auxiliares de mapeamento (.g.dart) com o comando:
 
    ```
-    dart run build_runner build --delete-conflicting-outputs
+   dart run build_runner build --delete-conflicting-outputs
    ```
 
 8. Execute o aplicativo:
    ```
-    flutter run
+   flutter run
    ```
 
 <sub>\* Para evitar problemas de versionamento do Flutter instale o [Flutter Version Management (FVM)](https://fvm.app)</sub>
