@@ -7,8 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-
-import 'datasources/auth_datasource_test.mocks.dart';
+import 'auth_datasource_test.mocks.dart';
 
 @GenerateMocks([Dio])
 Future<void> main() async {
