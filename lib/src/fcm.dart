@@ -59,3 +59,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 /// Inscreve o usuário em um tópico com base no ID
 Future<void> subscribeToTopic(String userId) =>
     FirebaseMessaging.instance.subscribeToTopic(userId);
+
+Future<void> unsubscribeFromTopic(String userId) =>
+    FirebaseMessaging.instance.unsubscribeFromTopic(userId);
