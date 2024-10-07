@@ -63,6 +63,7 @@ dev_dependencies:
   json_serializable: ^6.8.0
   integration_test:
     sdk: flutter
+  firebase_messaging_platform_interface: ^4.5.46
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
