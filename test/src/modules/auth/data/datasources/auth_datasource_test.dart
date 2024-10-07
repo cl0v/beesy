@@ -4,31 +4,36 @@ import 'package:app/src/modules/auth/data/datasources/auth_datasource.dart';
 import 'package:app/src/modules/auth/data/models/user.dart';
 import 'package:app/src/modules/auth/data/models/user_registration.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+
 import 'auth_datasource_test.mocks.dart';
 
-@GenerateMocks([Dio])
+@GenerateNiceMocks([MockSpec<Dio>(), MockSpec<FlutterSecureStorage>()])
 Future<void> main() async {
+  await dotenv.load(fileName: ".env.test");
+
   const email = "user@example.com";
   const password = "password123";
+
   final client = MockDio();
-  final datasource = AuthDatasource(client);
+  final secureStorage = MockFlutterSecureStorage();
+  final datasource = AuthDatasource(client, secure: secureStorage);
   group('SignUp', () {
     test('Successful registration', () async {
       //Arrange
       when(client.post(
         '$baseUrl/auth/register',
-        data: jsonEncode({
-          "email": email,
-          "password": password,
-        }),
+        options: anyNamed('options'),
+        data: anyNamed('data'),
       )).thenAnswer(
         (_) async => Response(
-          data: signUpJsonExample,
+          data: jsonEncode(signUpJsonExample),
           statusCode: 201,
-          requestOptions: RequestOptions(),
+          requestOptions: RequestOptions(path: '$baseUrl/auth/register'),
         ),
       );
 
@@ -40,23 +45,22 @@ Future<void> main() async {
 
       //Assert
       expect(response, (
-        201,
         UserRegistrationModel.fromJson(signUpJsonExample),
+        null,
       ));
     });
     test('Failed registration', () async {
       //Arrange
       when(client.post(
         '$baseUrl/auth/register',
-        data: jsonEncode({
-          "email": email,
-          "password": password,
-        }),
+        options: anyNamed('options'),
+        data: anyNamed('data'),
       )).thenThrow(
         DioException(
           requestOptions: RequestOptions(),
           response: Response(
             statusCode: 400,
+            data: jsonEncode({"message": "Email already exists"}),
             requestOptions: RequestOptions(),
           ),
         ),
@@ -71,38 +75,46 @@ Future<void> main() async {
       //Assert
       expect(
         response,
-        (400, null),
+        (null, "Email already exists"),
       );
     });
   });
   group('LogIn', () {
+    setUpAll(() async {
+      when(secureStorage.write(
+        key: 'jwt_token',
+        value: anyNamed('value'),
+      )).thenAnswer((_) async => Future<void>.value());
+    });
     test('Successful login', () async {
       //Arrange
       when(client.post(
         '$baseUrl/auth/login',
-        data: jsonEncode({
-          "email": email,
-          "password": password,
-        }),
+        options: anyNamed('options'),
+        data: anyNamed('data'),
       )).thenAnswer(
         (_) async => Response(
-          data: userJsonExample,
+          data: jsonEncode(userJsonExample),
           statusCode: 200,
           requestOptions: RequestOptions(),
         ),
       );
+      // when(secureStorage.write(
+      //   key: 'jwt_token',
+      //   value: anyNamed('value'),
+      // )).thenAnswer((_) async => Future<void>.value());
 
       //Act
       final response = await datasource.login(
         email,
         password,
       );
+      final user = UserModel.fromJson(userJsonExample);
 
       //Assert
-      final user = UserModel.fromJson(userJsonExample);
       expect(
         response,
-        (200, user),
+        (user, null),
       );
       expect(user.role, UserRole.user);
     });
@@ -111,15 +123,14 @@ Future<void> main() async {
       //Arrange
       when(client.post(
         '$baseUrl/auth/login',
-        data: jsonEncode({
-          "email": email,
-          "password": password,
-        }),
+        options: anyNamed('options'),
+        data: anyNamed('data'),
       )).thenThrow(
         DioException(
           requestOptions: RequestOptions(),
           response: Response(
             statusCode: 401,
+            data: jsonEncode({"message": "Invalid email or password"}),
             requestOptions: RequestOptions(),
           ),
         ),
@@ -134,7 +145,7 @@ Future<void> main() async {
       //Assert
       expect(
         response,
-        (401, null),
+        (null, "Invalid email or password"),
       );
     });
   });
@@ -145,10 +156,10 @@ const signUpJsonExample = {
   "userId": "unique_user_id"
 };
 
-
 final userJsonExample = {
   "token": "jwt_token",
   "userId": "unique_user_id",
+  "email": "user@example.com",
   "role": "user"
 };
 

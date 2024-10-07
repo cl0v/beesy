@@ -27,9 +27,7 @@ class AuthDatasource {
       final response = await client.post(
         '$baseUrl/auth/register',
         options: Options(
-          headers: {
-            'content-type': 'multipart/form-data',
-          },
+          contentType: 'multipart/form-data',
         ),
         data: FormData.fromMap(
           {
@@ -38,7 +36,10 @@ class AuthDatasource {
           },
         ),
       );
-      final model = UserRegistrationModel.fromJson(jsonDecode(response.data));
+      Map<String, dynamic> map = response.data.runtimeType == String
+          ? jsonDecode(response.data)
+          : response.data;
+      final model = UserRegistrationModel.fromJson(map);
       return (model, null);
     } on DioException catch (e) {
       return (null, jsonDecode(e.response?.data)['message'] as String?);
@@ -63,20 +64,27 @@ class AuthDatasource {
           },
         ),
       );
+
       if (response.statusCode == 200) {
-        JwtUtils(secure).saveJWT(jsonDecode(response.data)['token']);
+        Map<String, dynamic> map = response.data.runtimeType == String
+            ? jsonDecode(response.data)
+            : response.data;
+
+        await JwtUtils(secure).saveJWT(map['token']);
+
+        final model = UserModel.fromJson(
+          map
+            ..remove('token')
+            ..addAll(
+              {'email': email},
+            ),
+        );
+        return (model, null);
       }
-      final model = UserModel.fromJson(
-        (jsonDecode(response.data) as Map<String, dynamic>)
-          ..remove('token')
-          ..addAll(
-            {'email': email},
-          ),
-      );
-      return (model, null);
     } on DioException catch (e) {
       return (null, jsonDecode(e.response?.data)?['message'] as String?);
     }
+    return (null, null);
   }
 
   /// Retorna o StatusCode e o objeto de retorno do servidor
