@@ -68,6 +68,7 @@ class _HomePageState extends State<HomePage> {
             Visibility(
               visible: user.role == UserRole.admin,
               child: ElevatedButton(
+                key: const Key('dashboardButton'),
                 onPressed: () => context.push('/dashboard'),
                 child: const SizedBox(
                   width: double.infinity,

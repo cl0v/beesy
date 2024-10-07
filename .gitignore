@@ -148,3 +148,4 @@ lib/firebase_options.dart
 
 # FVM Version Cache
 .fvm/
+.vscode/settings.json

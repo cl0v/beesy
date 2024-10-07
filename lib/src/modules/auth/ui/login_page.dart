@@ -44,11 +44,13 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           children: [
             TextField(
+              key: const Key('emailField'),
               controller: _emailController,
               decoration: const InputDecoration(labelText: "Email"),
               keyboardType: TextInputType.emailAddress,
             ),
             TextField(
+              key: const Key('passwordField'),
               controller: _passwordController,
               decoration: const InputDecoration(labelText: "Senha"),
               obscureText: true,
@@ -78,6 +80,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
+              key: const Key('loginBtn'),
               onPressed: _login,
               child: const SizedBox(
                 width: double.infinity,
